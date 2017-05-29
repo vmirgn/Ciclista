@@ -1,7 +1,7 @@
 #include "stdafx.h"  //________________________________________ Ciclista.cpp
 #include "Ciclista.h"
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE , LPTSTR cmdLine, int cmdShow){
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR cmdLine, int cmdShow) {
 	Ciclista app;
 	app.CreateMainWindow(L"Ciclista", cmdShow, IDI_Ciclista, NULL, (HBRUSH)::GetStockObject(NULL_BRUSH), hInstance);
 	return app.MessageLoop(IDC_Ciclista);
@@ -10,89 +10,48 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE , LPTSTR cmdLine, int cmdSh
 void Ciclista::Window_Open(Win::Event& e)
 {
 	x = 0;
+	bitmap.CreateFromResource(this->hInstance, IDB_ESCENARIO);
+	lineas[0].hInstance = hInstance;
+	bicicleta.hInstance = hInstance;
+	lineas[0].positionY = (int)(SPACE + (LINE_HEIGHT*SPACE));
+	bicicleta.positionX = 150;
 }
 
 bool Ciclista::RenderScene(CG::Gdi& gdi)
 {
+	//CG::Gdi gdi(hWnd, true, false);
 	static DWORD prevTime = timeGetTime();
 	const DWORD currentTime = timeGetTime();
-	const float delta = (currentTime - prevTime)/1000.0f;
+	const float delta = (currentTime - prevTime) / 1000.0f;
 	//______________ Update the game
-	if (keyboard[VK_RIGHT])
+	lineas[0].positionY += (int)(800.0*delta);
+	if (lineas[0].positionY > height)
 	{
-		x += 100.0*delta; // 100 pixels/second
+		lineas[0].positionY = 0;
 	}
-	if (keyboard[VK_LEFT])
+	if (keyboard[VK_RIGHT] == true)
 	{
-		x -= 100.0*delta;  // 100 pixels/second
+		bicicleta.positionX += (int)(400.0*delta + 0.5);
+		if (bicicleta.positionX >= width - 110) bicicleta.positionX = width - 110;
+		//if (bicicleta.positionX < width - 80) bicicleta.positionX = width - 100;
 	}
-	// if (keyboard['A'])
-	//{
-	//	::PlaySound(MAKEINTRESOURCE(IDR_MYSOUND), hInstance, SND_RESOURCE | SND_ASYNC);
-	// }
-	if (x<0.0) x = width;
-	if (x>width) x = 0.0;
-
-	//____________________________________________ Paint Window Background
-	CG::Brush brush(RGB(100, 100, 255));
-	RECT rect = {0, 0, width, height};
-	gdi.FillRect(rect, brush);
-
+	if (keyboard[VK_LEFT] == true)
+	{
+		bicicleta.positionX -= (int)(400.0*delta + 0.5);
+		if (bicicleta.positionX <= 70) bicicleta.positionX = 70;
+		//if ((bicicleta.positionX <= 80) && (bicicleta.positionX >= 80)) bicicleta.positionX = 80;
+	}
+	//____________________________________________ Paint Game Background
+	CG::Brush brushBackground(RGB(0, 255, 0));
+	RECT rectBackground = { 0, 0, width, height };
+	gdi.FillRect(rectBackground, brushBackground);
+	//____________________________________________ Paint Highway Background
+	CG::Brush brushHighway(RGB(150, 150, 150));
+	RECT rectHighway = { 80, 0, width - 80, height };
+	gdi.FillRect(rectHighway, brushHighway);
+	lineas[0].Draw(gdi, width);
+	bicicleta.Draw(gdi, height);
 	//____________________________________________ Paint Small Circle
-	gdi.Circle((int)x, 20, 10);
-
 	prevTime = timeGetTime();
 	return true; // return false to stop
 }
-
-//void Ciclista::Window_Size(Win::Event& e)
-//{
-//	Game::Window::Window_Size(e);
-//	// Use this->width and this->height
-//}
-
-//void Ciclista::Window_KeyDown(Win::Event& e)
-//{
-//	switch (e.wParam)
-//	{
-//	case VK_SHIFT:
-//		break;
-//	case VK_UP:
-//		break;
-//	case 'A':
-//		break;
-//	}
-//}
-
-//void Ciclista::Window_KeyUp(Win::Event& e)
-//{
-//	switch (e.wParam)
-//	{
-//	case VK_SHIFT:
-//		break;
-//	case VK_UP:
-//		break;
-//	case 'A':
-//		break;
-//	}
-//}
-
-//void Ciclista::Window_LButtonDown(Win::Event& e)
-//{
-//	const int x = GET_X_LPARAM(e.lParam);
-//	const int y = GET_Y_LPARAM(e.lParam);
-//	this->SetFocus();
-//}
-
-//void Ciclista::Window_LButtonUp(Win::Event& e)
-//{
-//	const int x = GET_X_LPARAM(e.lParam);
-//	const int y = GET_Y_LPARAM(e.lParam);
-//}
-
-//void Ciclista::Window_MouseMove(Win::Event& e)
-//{
-//	const int x = GET_X_LPARAM(e.lParam);
-//	const int y = GET_Y_LPARAM(e.lParam);
-//}
-
