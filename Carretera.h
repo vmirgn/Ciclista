@@ -1,6 +1,6 @@
 #pragma once
 #include "Resource.h"
-#define LINE_WIDTH 20
+#define LINE_WIDTH 10
 #define LINE_HEIGHT 200
 
 class Carretera
@@ -9,7 +9,8 @@ public:
 	Carretera();
 	~Carretera();
 	int positionY;
-	void Draw(CG::Gdi& gdi, int &width);
+	Sys::Icon icon;
+	void Draw(CG::Gdi& gdi, int &width, int &height);
 	HINSTANCE hInstance;
 };
 

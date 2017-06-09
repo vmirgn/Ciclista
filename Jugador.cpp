@@ -1,5 +1,6 @@
-#include "Jugador.h"
 #include "stdafx.h"
+#include "Jugador.h"
+
 
 Jugador::Jugador()
 {
@@ -13,6 +14,6 @@ Jugador::~Jugador()
 
 void Jugador::Draw(CG::Gdi& gdi, int &height)
 {
-	icon.Load(hInstance, IDI_ICON1);
+	icon.Load(hInstance, IDI_BICICLETA);
 	gdi.DrawIcon(positionX, height - CICLISTA_HEIGHT, icon);
 }
